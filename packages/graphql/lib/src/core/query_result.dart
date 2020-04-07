@@ -27,6 +27,7 @@ class QueryResult {
   QueryResult({
     this.data,
     this.exception,
+    this.errors,
     bool loading,
     bool optimistic,
     QueryResultSource source,
@@ -51,6 +52,8 @@ class QueryResult {
 
   OperationException exception;
 
+  List<GraphQLError> errors;
+
   /// Whether data has been specified from either the cache or network)
   bool get loading => source == QueryResultSource.Loading;
 
@@ -60,6 +63,22 @@ class QueryResult {
 
   /// Whether the response includes an exception
   bool get hasException => (exception != null);
+
+  bool get hasErrors {
+    if (errors == null) {
+      return false;
+    }
+
+    return errors.isNotEmpty;
+  }
+
+  void addError(GraphQLError graphQLError) {
+    if (errors != null) {
+      errors.add(graphQLError);
+    } else {
+      errors = <GraphQLError>[graphQLError];
+    }
+  }
 }
 
 class MultiSourceResult {
